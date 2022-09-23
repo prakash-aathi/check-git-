@@ -1,8 +1,12 @@
-from flask import Flask,render_template,url_for,flash,redirect
-from forms import RegistrationForm, LoginForm
+from flask import Flask,render_template,request,url_for,flash,redirect
+import sqlite3
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aaaaa'
+
+con=sqlite3.connect("database.db")
+con.execute("Create table if not exists data(pid integer primary key,title  text , desc text ,link text)")
+con.close()
 
 @app.route('/')
 def home():
@@ -20,24 +24,46 @@ def signup():
 def about():
     return render_template('about.html')
 
+@app.route('/add_jobs')
+def add():
+    return render_template("add.html")
+
+@app.route('/adddata',methods=['POST','GET'])
+def adddata():
+    if request.method=='POST':
+        try:
+            title=request.form['title']
+            desc=request.form['desc']
+            link=request.form['link']
+            con=sqlite3.connect("database.db")
+            cur=con.cursor()
+            cur.execute("insert into data(title,desc,link) values(?,?,?)",(title,desc,link))
+            con.commit()
+            flash("Job Added Successfully",'success')
+        except:
+            flash("error in insert operation","danger")
+        finally:
+            return redirect(url_for("view"))
+            con.close()
+
+@app.route('/view_jobs')
+def view():
+    con=sqlite3.connect('database.db')
+    con.row_factory=sqlite3.Row
+    cur=con.cursor()
+    cur.execute("select * from data")
+    data=cur.fetchall()
+    con.close
+    return render_template("view.html",data=data)
+
 @app.route("/signup", methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home'))
-    return render_template('signup.html',form=form)
+    return render_template('signup.html')
 
 
 @app.route("/signin", methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('home'))
-        else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
-    return render_template('signin.html', form=form)
+    return render_template('signin.html')
+
 if __name__ == "__main__":
-    app.run('0.0.0.0',port=8080,debug=False)
+    app.run('0.0.0.0',port=8080,debug=True)
