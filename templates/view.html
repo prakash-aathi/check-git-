@@ -32,12 +32,14 @@
 {% block body %}
 <div class="container">
     <h2 class="page-header text-center text-info display-4">Apply the jobs</h2>
-    </div>
+    
     {% for res in data%}
         {% set i=loop.index %}
         <div class="card my-5">
-            <div class="card-header">
-              Job Id: {{i}}
+            <div class="card-header d-flex  ">
+              <div class="me-auto">Job Id: {{i}}</div>
+              <div><a href="{{url_for('update',id=res['pid'])}}" class=" btn btn-sm btn-block btn-success mx-3 ">Update</a></div>
+              <div><a href="{{url_for('delete',id=res['pid'])}}" class=" btn btn-sm btn-block btn-danger mx-3 ">Delete</a></div>
             </div>
             <div class="card-body">
               <h5 class="card-title">{{res['title']}}</h5>
@@ -46,8 +48,10 @@
               </p>
               <a href="#" target="_blank" class="btn btn-primary">{{res['link']}}</a>
             </div>
+        </div>
     {% endfor %}
-
+   
 </div>
 
 {% endblock %}
+

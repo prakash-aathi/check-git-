@@ -1,3 +1,4 @@
+from turtle import title
 from flask import Flask,render_template,request,url_for,flash,redirect
 import sqlite3
 
@@ -65,5 +66,45 @@ def register():
 def login():
     return render_template('signin.html')
 
+@app.route('/update/<string:id>',methods=['POST','GET'])
+def update(id):
+    con=sqlite3.connect('database.db')
+    con.row_factory=sqlite3.Row
+    cur=con.cursor()
+    cur.execute("select * from data where pid=?",(id))
+    data=cur.fetchone()
+    con.close
+
+    if request.method=='POST':
+        try:
+            title=request.form['title']
+            desc=request.form['desc']
+            link=request.form['link']
+            con=sqlite3.connect("database.db")
+            cur=con.cursor()
+            cur.execute("update data set title=?,desc=?,link=? where pid=?",(title,desc,link,id))
+            con.commit()
+            flash("update Successfully","success")
+        except:
+            flash("Error in update","danger")
+        finally:
+            return redirect(url_for('view'))
+            con.close()
+    return render_template('update.html',data=data)
+
+@app.route('/delete/<string:id>')
+def delete(id):
+    try:
+        con=sqlite3.connect('database.db')
+        cur=con.cursor()
+        cur.execute('delete from data where pid=?',(id))
+        con.commit()
+        flash("record deleted successfully",'success')
+    except:
+        flash("record delete failed","danger")
+    finally:
+        return redirect (url_for("view"))
+        con.close()
+
 if __name__ == "__main__":
-    app.run('0.0.0.0',port=8080,debug=True)
+    app.run('0.0.0.0',port=8080,debug=False)
