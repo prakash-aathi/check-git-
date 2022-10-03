@@ -36,6 +36,23 @@
     <!-- end nav bar -->
 
      {% block body %} {% endblock %}
+
+     <!-- bot Start-->
+     <script>
+      window.watsonAssistantChatOptions = {
+        integrationID: "bae1d2fa-58fd-4176-9ba7-88701dab52bf", // The ID of this integration.
+        region: "au-syd", // The region your integration is hosted in.
+        serviceInstanceID: "8187f921-dbf2-4b32-bc7f-205c659d2495", // The ID of your service instance.
+        onLoad: function(instance) { instance.render(); }
+      };
+      setTimeout(function(){
+        const t=document.createElement('script');
+        t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+        document.head.appendChild(t);
+      });
+    </script>
+     <!-- bot end -->
+
     <!-- bs-5 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>

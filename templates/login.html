@@ -20,15 +20,17 @@
   <a class="nav-link text-primary  " href="{{ url_for('view') }}">View job</a>
 </li> 
 
-<li class="nav-item ">
-<a class="nav-link text-primary" href="{{ url_for('signin') }}">Sign in</a>
-</li>
 <li class="nav-item">
-<a class="nav-link text-primary text-warning" href="{{ url_for('signup') }}">Sign Up</a>
+  <a class="nav-link text-primary text-warning" href="{{ url_for('login') }}">log in</a>
 </li>
+
+<li class="nav-item ">
+<a class="nav-link text-primary" href="{{ url_for('register') }}">register</a>
+</li>
+
 {% endblock %}
 
-
+<!-- LOGIN FORM -->
  
 {% block body %}
 <div class="container mt-3">
@@ -48,7 +50,7 @@
             </label>
         </div>
         <button class="btn btn-primary" type="submit">Log in</button>
-        <p class="text-muted my-3">If you do'nt have an account Please <a href="{{url_for('signin')}}">Register</a></p>
+        <p class="text-muted my-3">If you do'nt have an account Please <a href="{{url_for('register')}}">Register</a></p>
     </form>
 </div>
 {% endblock %}
